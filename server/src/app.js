@@ -15,6 +15,10 @@ const app = express()
 app.use(cors({ origin: '*' }))
 app.use(express.json())
 app.use(morgan('dev'))
+app.use(async (_req, _res, next) => {
+    await connectDB()
+    next()
+})
 
 app.use('/api/auth', authRouter)
 app.use('/api/categories', categoriesRouter)
@@ -23,7 +27,10 @@ app.use('/api/expenses', expensesRouter)
 app.use('/api/reports', reportsRouter)
 
 const port = process.env.PORT || 4000
-app.listen(port, async () => {
-    await connectDB()
-    console.log(`Server is running on port ${port}`);
+
+connectDB().then(() => {
+    app.listen(port, () => {
+        console.log(`Server is running on port ${port}`)
+    })
 })
+export default (req, res) => app(req, res)
