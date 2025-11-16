@@ -12,6 +12,8 @@ import reportsRouter from './routes/reports.js'
 dotenv.config()
 const app = express()
 
+connectDB();
+
 app.use(cors({ origin: '*' }))
 app.use(express.json())
 app.use(morgan('dev'))
@@ -20,6 +22,9 @@ app.use(async (_req, _res, next) => {
     next()
 })
 
+app.use('/', () => {
+    res.send('Budget Expense Tracker API')
+})
 app.use('/api/auth', authRouter)
 app.use('/api/categories', categoriesRouter)
 app.use('/api/budgets', budgetsRouter)
@@ -28,9 +33,7 @@ app.use('/api/reports', reportsRouter)
 
 const port = process.env.PORT || 4000
 
-connectDB().then(() => {
-    app.listen(port, () => {
-        console.log(`Server is running on port ${port}`)
-    })
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`)
 })
 export default (req, res) => app(req, res)
