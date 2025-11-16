@@ -5,19 +5,45 @@ const authHeader = () => {
   return t ? { Authorization: `Bearer ${t}` } : {}
 }
 
+const refreshAccessToken = async () => {
+  const rt = localStorage.getItem('refreshToken')
+  if (!rt) return null
+  try {
+    const r = await fetch(`${base}/auth/refresh`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ refreshToken: rt }) })
+    if (!r.ok) return null
+    const data = await r.json()
+    if (data.accessToken) localStorage.setItem('accessToken', data.accessToken)
+    if (data.refreshToken) localStorage.setItem('refreshToken', data.refreshToken)
+    return data.accessToken || null
+  } catch {
+    return null
+  }
+}
+
+const request = async (path, init = {}) => {
+  const first = await fetch(`${base}${path}`, { ...init, headers: { ...(init.headers || {}), ...authHeader() } })
+  if (first.status === 401) {
+    const newAccess = await refreshAccessToken()
+    if (newAccess) {
+      const second = await fetch(`${base}${path}`, { ...init, headers: { ...(init.headers || {}), Authorization: `Bearer ${newAccess}` } })
+      return second.json()
+    } else {
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('refreshToken')
+    }
+  }
+  return first.json()
+}
+
 export const post = async (path, body) => {
-  const r = await fetch(`${base}${path}`, { method: 'POST', headers: { 'Content-Type': 'application/json', ...authHeader() }, body: JSON.stringify(body) })
-  return r.json()
+  return request(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
 }
 export const get = async (path) => {
-  const r = await fetch(`${base}${path}`, { headers: { ...authHeader() } })
-  return r.json()
+  return request(path)
 }
 export const patch = async (path, body) => {
-  const r = await fetch(`${base}${path}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', ...authHeader() }, body: JSON.stringify(body) })
-  return r.json()
+  return request(path, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
 }
 export const del = async (path) => {
-  const r = await fetch(`${base}${path}`, { method: 'DELETE', headers: { ...authHeader() } })
-  return r.json()
+  return request(path, { method: 'DELETE' })
 }
