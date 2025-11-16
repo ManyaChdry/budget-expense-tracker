@@ -22,7 +22,7 @@ app.use(async (_req, _res, next) => {
     next()
 })
 
-app.get('/', () => {
+app.get('/', (_req, res) => {
     res.send('Budget Expense Tracker API')
 })
 app.use('/api/auth', authRouter)
