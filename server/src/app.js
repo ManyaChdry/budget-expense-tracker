@@ -11,7 +11,6 @@ import reportsRouter from './routes/reports.js'
 
 dotenv.config()
 const app = express()
-connectDB()
 
 app.use(cors({ origin: process.env.CORS_ORIGIN, credentials: true }))
 app.use(express.json())
@@ -24,4 +23,7 @@ app.use('/api/expenses', expensesRouter)
 app.use('/api/reports', reportsRouter)
 
 const port = process.env.PORT || 4000
-app.listen(port, () => {})
+app.listen(port, async () => {
+    await connectDB()
+    console.log(`Server is running on port ${port}`);
+})

@@ -8,12 +8,14 @@ const issueAccess = userId => jwt.sign({}, process.env.JWT_SECRET, { expiresIn: 
 const issueRefresh = userId => jwt.sign({}, process.env.REFRESH_SECRET, { expiresIn: process.env.REFRESH_EXPIRES_IN, subject: String(userId) })
 
 router.post('/sign-up', async (req, res) => {
-  const { Email, Password } = req.body
-  if (!Email || !Password) return res.status(400).json({ message: 'Invalid' })
-  const exists = await User.findOne({ email: Email })
-  if (exists) return res.status(409).json({ message: 'Email exists' })
-  const passwordHash = await bcrypt.hash(Password, 10)
-  const user = await User.create({ email: Email, passwordHash })
+  const { email, password } = req.body
+  if (!email || !password) { 
+    return res.status(400).json({ message: 'Invalid' }) 
+  }
+  const exists = await User.findOne({ email: email })
+  if (exists) return res.status(409).json({ message: 'email exists' })
+  const passwordHash = await bcrypt.hash(password + process.env.PASSWORD_SALT, 10)
+  const user = await User.create({ email: email, passwordHash })
   const accessToken = issueAccess(user._id)
   const refreshToken = issueRefresh(user._id)
   user.refreshTokens.push({ token: refreshToken, createdAt: new Date() })
@@ -22,10 +24,10 @@ router.post('/sign-up', async (req, res) => {
 })
 
 router.post('/login', async (req, res) => {
-  const { Email, Password } = req.body
-  const user = await User.findOne({ email: Email })
+  const { email, password } = req.body
+  const user = await User.findOne({ email: email })
   if (!user) return res.status(401).json({ message: 'Invalid credentials' })
-  const ok = await bcrypt.compare(Password, user.passwordHash)
+  const ok = await bcrypt.compare(password + process.env.PASSWORD_SALT, user.passwordHash)
   if (!ok) return res.status(401).json({ message: 'Invalid credentials' })
   const accessToken = issueAccess(user._id)
   const refreshToken = issueRefresh(user._id)
