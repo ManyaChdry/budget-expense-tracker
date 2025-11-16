@@ -8,6 +8,7 @@ export default function Dashboard({ month, setMonth }) {
   const [form, setForm] = useState({ Category: '', expenseName: '', expense: '', date: new Date().toISOString().slice(0,10) })
   const [toast, setToast] = useState(null)
   const [report, setReport] = useState([])
+  const [expenses, setExpenses] = useState([])
 
   const loadBase = async () => {
     setCategories(await get('/categories'))
@@ -20,6 +21,13 @@ export default function Dashboard({ month, setMonth }) {
     })()
   }, [month])
 
+  useEffect(() => {
+    (async () => {
+      const rows = await get(`/expenses?month=${month}`)
+      setExpenses(Array.isArray(rows) ? rows : [])
+    })()
+  }, [month])
+
   const saveExpense = async () => {
     const r = await post('/expenses', { ...form, expense: Number(form.expense), date: form.date })
     setShowForm(false)
@@ -27,6 +35,8 @@ export default function Dashboard({ month, setMonth }) {
     setTimeout(() => setToast(null), 2000)
     const rep = await get(`/reports/category-budget-report?month=${month}`)
     setReport(rep)
+    const ex = await get(`/expenses?month=${month}`)
+    setExpenses(Array.isArray(ex) ? ex : [])
   }
 
   const currentLabel = new Date(`${month}-01`).toLocaleString(undefined, { month: 'long', year: 'numeric' })
@@ -41,6 +51,24 @@ export default function Dashboard({ month, setMonth }) {
       {report.map(r => (
         <CategoryCard key={r.categoryId} name={r.name} colorHex={r.colorHex} spent={r.spent} limit={r.budget} />
       ))}
+
+      <h3 style={{ margin: '16px 0 8px' }}>Expenses</h3>
+      <div>
+        {expenses.length === 0 && <div style={{ color:'#777' }}>No expenses for this month</div>}
+        {expenses.map(e => {
+          return (
+            <div key={e._id} style={{ display:'grid', gridTemplateColumns:'1fr 2fr 1fr 1fr', gap:8, borderBottom:'1px solid #eee', padding:'6px 0' }}>
+              <div>{e.date?.slice(0,10)}</div>
+              <div>{e.expenseName}</div>
+              <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                {e.categoryId && <div style={{ width:12, height:12, borderRadius:6, background:e.categoryId.colorHex }} />}
+                <span>{e.categoryId?.name || 'Uncategorized'}</span>
+              </div>
+              <div style={{ textAlign:'right' }}>₹{Number(e.amount).toFixed(2)}</div>
+            </div>
+          )
+        })}
+      </div>
       {showForm && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ background: '#fff', padding: 16, borderRadius: 8, minWidth: 320 }}>
