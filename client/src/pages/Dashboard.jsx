@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { get, post, patch } from '../api.js'
-import CategoryCard from '../components/CategoryCard.jsx'
 
 export default function Dashboard({ month, setMonth }) {
   const [categories, setCategories] = useState([])
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({ Category: '', expenseName: '', expense: '', date: new Date().toISOString().slice(0,10) })
   const [toast, setToast] = useState(null)
-  const [report, setReport] = useState([])
   const [expenses, setExpenses] = useState([])
   const [editingId, setEditingId] = useState(null)
 
@@ -15,12 +13,6 @@ export default function Dashboard({ month, setMonth }) {
     setCategories(await get('/categories'))
   }
   useEffect(() => { loadBase() }, [])
-  useEffect(() => {
-    (async () => {
-      const r = await get(`/reports/category-budget-report?month=${month}`)
-      setReport(r)
-    })()
-  }, [month])
 
   useEffect(() => {
     (async () => {
@@ -38,8 +30,6 @@ export default function Dashboard({ month, setMonth }) {
       setToast(r.withinBudget ? 'Within budget' : 'Over budget')
       setTimeout(() => setToast(null), 2000)
     }
-    const rep = await get(`/reports/category-budget-report?month=${month}`)
-    setReport(rep)
     const ex = await get(`/expenses?month=${month}`)
     setExpenses(Array.isArray(ex) ? ex : [])
   }
@@ -53,9 +43,6 @@ export default function Dashboard({ month, setMonth }) {
         <input type="month" value={month} onChange={e=>setMonth(e.target.value)} style={{ marginLeft: 'auto' }} />
         <button onClick={() => setShowForm(true)}>Add Expense</button>
       </div>
-      {report?.map(r => (
-        <CategoryCard key={r.categoryId} name={r.name} colorHex={r.colorHex} spent={r.spent} limit={r.budget} />
-      ))}
 
       <h3 style={{ margin: '16px 0 8px' }}>Expenses</h3>
       <div>
