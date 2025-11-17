@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from 'react'
-import { Routes, Route, Navigate, Link, useNavigate } from 'react-router-dom'
+import { Routes, Route, Navigate, NavLink, useNavigate } from 'react-router-dom'
 import AuthPage from './pages/AuthPage.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import Reports from './pages/Reports.jsx'
 import CategoriesSettings from './pages/CategoriesSettings.jsx'
 import BudgetsSettings from './pages/BudgetsSettings.jsx'
 
-const Nav = () => (
-  <nav style={{ position: 'fixed', bottom: 0, left: 0, right: 0, display: 'flex', gap: 12, padding: 12, borderTop: '1px solid #ddd', background: '#fff', justifyContent: 'space-around' }}>
-    <Link to="/">Dashboard</Link>
-    <Link to="/reports">Reports</Link>
-    <Link to="/settings/categories">Categories</Link>
-    <Link to="/settings/budgets">Budgets</Link>
-  </nav>
-)
+const Nav = () => {
+  const navigate = useNavigate()
+  const logout = () => { localStorage.removeItem('accessToken'); localStorage.removeItem('refreshToken'); navigate('/auth') }
+  return (
+    <nav className="nav">
+      <div className="brand"><span className="brand-icon">💸</span>Budget Tracker</div>
+      <div className="nav-items">
+        <NavLink className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} to="/"><span className="nav-icon">📊</span>Dashboard</NavLink>
+        <NavLink className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} to="/reports"><span className="nav-icon">📈</span>Reports</NavLink>
+        <NavLink className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} to="/settings/categories"><span className="nav-icon">🗂️</span>Categories</NavLink>
+        <NavLink className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} to="/settings/budgets"><span className="nav-icon">💼</span>Budgets</NavLink>
+        <button className="nav-link nav-btn" onClick={logout}><span className="nav-icon">🚪</span>Logout</button>
+      </div>
+    </nav>
+  )
+}
 
 const RequireAuth = ({ children }) => {
   const token = localStorage.getItem('accessToken')
@@ -28,7 +36,8 @@ export default function App() {
   })
   useEffect(() => {}, [month])
   return (
-    <div style={{ paddingBottom: 64 }}>
+    <div className="app" style={{ paddingTop: 64 }}>
+
       <Routes>
         <Route path="/auth" element={<AuthPage onSuccess={() => navigate('/')} />} />
         <Route path="/" element={<RequireAuth><Dashboard month={month} setMonth={setMonth} /></RequireAuth>} />

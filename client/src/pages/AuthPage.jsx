@@ -15,14 +15,17 @@ export default function AuthPage({ onSuccess }) {
     }
   }
   return (
-    <div style={{ maxWidth: 360, margin: '40px auto' }}>
-      <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
-        <button onClick={() => setTab('login')} disabled={tab==='login'}>Log In</button>
-        <button onClick={() => setTab('signup')} disabled={tab==='signup'}>Sign Up</button>
+    <div className="auth-backdrop">
+      <div className="auth-dialog">
+        <h3>{tab==='login' ? 'Welcome back' : 'Create account'}</h3>
+        <div style={{ display:'flex', gap:8, marginBottom:12 }}>
+          <button className="btn-outline" onClick={() => setTab('login')} disabled={tab==='login'}>Log In</button>
+          <button className="btn-outline" onClick={() => setTab('signup')} disabled={tab==='signup'}>Sign Up</button>
+        </div>
+        <input placeholder="email" value={email} onChange={e=>setEmail(e.target.value)} />
+        <input type="password" placeholder="password" value={password} onChange={e=>setPassword(e.target.value)} />
+        <button onClick={submit}>{tab==='login'?'Log In':'Sign Up'}</button>
       </div>
-      <input placeholder="email" value={email} onChange={e=>setEmail(e.target.value)} style={{ width: '100%', marginBottom: 8 }} />
-      <input type="password" placeholder="password" value={password} onChange={e=>setPassword(e.target.value)} style={{ width: '100%', marginBottom: 8 }} />
-      <button onClick={submit} style={{ width: '100%' }}>{tab==='login'?'Log In':'Sign Up'}</button>
     </div>
   )
 }

@@ -1,0 +1,55 @@
+:root{--bg:#f6f7fb;--surface:#fff;--text:#1b1e23;--muted:#6b7280;--primary:#4a90e2;--primary-hover:#3b7cd1;--danger:#e23c4a;--success:#2a7f5f;--border:#e5e7eb;--shadow:0 8px 24px rgba(0,0,0,.08)}
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,"Apple Color Emoji","Segoe UI Emoji";color:var(--text);background:var(--bg)}
+h1,h2,h3{margin:0 0 8px}
+input,select{appearance:none;border:1px solid var(--border);padding:8px 10px;border-radius:8px;background:var(--surface);color:var(--text)}
+button{border:none;background:var(--primary);color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer;box-shadow:var(--shadow)}
+button:disabled{opacity:.6;cursor:not-allowed}
+button:hover:not(:disabled){background:var(--primary-hover)}
+.container{max-width:720px;margin:16px auto;padding:0 16px 84px;display:flex;flex-direction:column;align-items:center}
+.section{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:var(--shadow);margin-bottom:12px}
+.page-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.page-header .spacer{margin-left:auto}
+.list-row{display:grid;grid-template-columns:1fr 2fr 1fr 1fr auto;gap:12px;border-bottom:1px solid var(--border);padding:10px 0;align-items:center}
+.list-empty{color:var(--muted)}
+.dot{width:12px;height:12px;border-radius:6px}
+.modal-backdrop{position:fixed;inset:0;background:rgba(17,24,39,.45);display:flex;align-items:center;justify-content:center}
+.modal{background:var(--surface);padding:16px;border-radius:12px;min-width:340px;box-shadow:var(--shadow)}
+.nav{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;gap:24px;padding:16px;border-bottom:1px solid var(--border);backdrop-filter:saturate(180%) blur(8px);background:rgba(255,255,255,.9);justify-content:space-between;padding-left:40px}
+.nav-link{color:var(--text);text-decoration:none;padding:8px 12px;border-radius:8px}
+.nav-link:hover{background:rgba(0,0,0,.06)}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:18px;letter-spacing:.5px}
+.brand-icon{width:22px;height:22px;border-radius:6px;background:var(--primary);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:14px}
+.nav-items{display:flex;gap:8px;flex:1;justify-content:flex-end}
+.nav-icon{margin-right:6px;font-size:14px}
+.nav-link.active{font-weight:800;box-shadow:var(--shadow);background:rgba(0,0,0,.06);border-radius:8px}
+.nav-btn{background:transparent;border:none;cursor:pointer}
+
+/* Page vertical centering utility */
+.page-fill{min-height:calc(100vh - 84px);display:flex;flex-direction:column;justify-content:center}
+
+/* Auth page backdrop and dialog */
+.auth-backdrop{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f0fff4 0%,#e8f5e9 50%,#dff7e6 100%)}
+.auth-dialog{background:#ffffff;color:#1b1e23;border:1px solid #c8e6c9;border-radius:14px;box-shadow:0 24px 48px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.5);padding:20px;min-width:340px;max-width:380px}
+.auth-dialog h3{margin:0 0 12px}
+.auth-dialog input,.auth-dialog button{width:100%;margin-bottom:10px}
+
+/* Pastel palette for category colors */
+.palette{display:flex;gap:6px;flex-wrap:wrap}
+.swatch{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);cursor:pointer}
+.swatch:focus{outline:2px solid #333}
+
+/* Dashboard expenses dialog + table */
+.dialog{background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px;min-width:640px}
+.table{width:100%;border-collapse:separate;border-spacing:0}
+.table th,.table td{text-align:center;padding:10px;border-bottom:1px solid var(--border)}
+.table td:first-child{text-align:left}
+.actions{display:inline-flex;gap:30px}
+.form-stack{display:flex;flex-direction:column;gap:30px}
+.table thead th{font-weight:600}
+.table-top{display:grid;grid-template-columns:1fr 2fr 1fr 1fr auto;align-items:center;margin-bottom:8px;padding-left:0}
+.table-title{margin:0;color:var(--text);text-align:right}
+.icon-btn{padding:8px 12px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;background:var(--primary);color:#fff;box-shadow:var(--shadow);border:none}
+.icon-btn:hover{background:var(--primary-hover)}
+.month-label{margin-right:12px;color:var(--text);font-size:28px;font-weight:700}
