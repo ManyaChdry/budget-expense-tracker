@@ -30,10 +30,23 @@ button:hover:not(:disabled){background:var(--primary-hover)}
 .page-fill{min-height:calc(100vh - 84px);display:flex;flex-direction:column;justify-content:center}
 
 /* Auth page backdrop and dialog */
-.auth-backdrop{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f0fff4 0%,#e8f5e9 50%,#dff7e6 100%)}
+.auth-backdrop{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#f0fff4 0%,#e8f5e9 50%,#dff7e6 100%)}
 .auth-dialog{background:#ffffff;color:#1b1e23;border:1px solid #c8e6c9;border-radius:14px;box-shadow:0 24px 48px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.5);padding:20px;min-width:340px;max-width:380px}
-.auth-dialog h3{margin:0 0 12px}
-.auth-dialog input,.auth-dialog button{width:100%;margin-bottom:10px}
+.auth-message{margin-bottom:12px;color:var(--muted);text-align:center}
+.auth-heading{font-weight:800;font-size:18px;text-align:center;margin-bottom:12px}
+.auth-dialog input{width:100%;margin-bottom:10px}
+.input-wrap{position:relative}
+.password-input{padding-right:40px}
+.toggle-eye{position:absolute;right:10px;top:calc(50% - 5px);transform:translateY(-50%);background:transparent;border:none;padding:0;cursor:pointer;width:24px;height:24px;color:var(--muted);outline:none}
+.toggle-eye:hover{color:#b58900;background:radial-gradient(circle at center, rgba(245,197,24,0.35) 0%, rgba(245,197,24,0.15) 60%, rgba(245,197,24,0) 100%)}
+.toggle-eye:focus{outline:none}
+.toggle-eye svg{display:block}
+
+/* Hide native password reveal icons */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear { display: none; }
+input[type="password"]::-webkit-textfield-decoration-container { display: none; }
+.submit-btn{width:40%;display:block;margin:10px auto 0}
 
 /* Pastel palette for category colors */
 .palette{display:flex;gap:6px;flex-wrap:wrap}

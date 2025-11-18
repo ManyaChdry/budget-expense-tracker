@@ -8,7 +8,7 @@ export default function Dashboard({ month, setMonth }) {
     Category: "",
     expenseName: "",
     expense: "",
-    date: new Date().toISOString().slice(0, 10),
+    date: new Date().toLocaleDateString("en-CA"),
   });
   const [toast, setToast] = useState(null);
   const [expenses, setExpenses] = useState([]);
@@ -126,8 +126,8 @@ export default function Dashboard({ month, setMonth }) {
                             expenseName: e.expenseName || "",
                             expense: String(e.amount ?? ""),
                             date: (
-                              e.date || new Date().toISOString().slice(0, 10)
-                            ).slice(0, 10),
+                              e.date?.slice(0, 10) || new Date().toLocaleDateString("en-CA")
+                            ),
                           });
                         }}
                       >

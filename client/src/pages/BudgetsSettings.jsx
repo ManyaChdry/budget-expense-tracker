@@ -25,6 +25,13 @@ export default function BudgetsSettings({ month }) {
     }
   }
   const remove = async (id) => { await del(`/budgets/${id}`); setRows(await get(`/budgets?month=${month}`)) }
+  const removeBudget = async (categoryId) => {
+    const row = map.get(categoryId)
+    if (row) {
+      await del(`/budgets/${row._id}`)
+    }
+    setRows(await get(`/budgets?month=${month}`))
+  }
 
   const openEdit = (c) => {
     setEditingId(c._id)
@@ -71,7 +78,7 @@ export default function BudgetsSettings({ month }) {
                 <tr key={c._id}>
                   <td><span style={{ display:'inline-flex', alignItems:'center', gap:8 }}><span className="dot" style={{ background:c.colorHex }}></span>{c.name}</span></td>
                   <td>{row?.amount ?? ''}</td>
-                  <td><div className="actions"><button className="btn-outline" onClick={()=>openEdit(c)}>Edit</button>{row && <button className="btn-outline" onClick={()=>remove(row._id)}>Remove</button>}</div></td>
+                  <td><div className="actions"><button className="btn-outline" onClick={()=>openEdit(c)}>Edit</button><button className="btn-outline" onClick={()=>removeBudget(c._id)}>Remove</button></div></td>
                 </tr>
               )
             })}
